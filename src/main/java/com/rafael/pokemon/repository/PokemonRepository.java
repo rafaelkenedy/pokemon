@@ -48,7 +48,7 @@ public interface PokemonRepository extends JpaRepository<Pokemon, Long> {
                 (SELECT COUNT(t)
                  FROM p.types t
                  WHERE t IN :types
-                ) = :#{#types.size()}
+                ) = :#{#types != null ? #types.size() : 0}
             )
         )
 """)
