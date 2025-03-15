@@ -3,6 +3,7 @@ package com.rafael.pokemon.config;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 import com.rafael.pokemon.model.Pokemon;
+import com.rafael.pokemon.model.enums.Type;
 import com.rafael.pokemon.repository.PokemonRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -24,7 +25,7 @@ public class DataSeeder implements CommandLineRunner {
 
   @Override
   public void run(String... args) {
-    if (pokemonRepository.count() > 151 || pokemonRepository.count() == 0) {
+    if (pokemonRepository.count() > 1010 || pokemonRepository.count() == 0) {
       try {
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream("seed.csv");
         if (inputStream == null) {
@@ -42,7 +43,11 @@ public class DataSeeder implements CommandLineRunner {
             String name = row[1];
             String generation = row[2];
             String region = row[3];
-            List<String> types = Arrays.asList(row[4].split(";"));
+            List<Type> types =
+                Arrays.stream(row[4].split(";"))
+                    .map(String::toUpperCase)
+                    .map(Type::valueOf)
+                    .toList();
 
             Pokemon pokemon = new Pokemon(id, name, generation, region, types);
             pokemonRepository.save(pokemon);

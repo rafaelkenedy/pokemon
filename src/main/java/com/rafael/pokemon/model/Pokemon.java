@@ -1,15 +1,12 @@
 package com.rafael.pokemon.model;
 
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-
+import com.rafael.pokemon.model.enums.Type;
+import jakarta.persistence.*;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "pokemons")
@@ -19,12 +16,12 @@ import java.util.List;
 @AllArgsConstructor
 public class Pokemon {
 
-    @Id
-    private Long id;
-    private String name;
-    private String generation;
-    private String region;
+  @Id private Long id;
+  private String name;
+  private String generation;
+  private String region;
 
-    @ElementCollection
-    private List<String> type;
+  @ElementCollection(targetClass = Type.class)
+  @Enumerated(EnumType.STRING)
+  private List<Type> types;
 }
