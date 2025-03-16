@@ -19,7 +19,10 @@ public class Pokemon {
   @Id private Long id;
   private String name;
   private String generation;
-  private String region;
+
+  @ManyToOne
+  @JoinColumn(name = "region_id")
+  private Region region;
 
   @ElementCollection(targetClass = Type.class)
   @Enumerated(EnumType.STRING)

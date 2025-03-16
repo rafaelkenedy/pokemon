@@ -1,26 +1,28 @@
 package com.rafael.pokemon.config;
 
 import com.opencsv.CSVReader;
-import com.opencsv.exceptions.CsvException;
 import com.rafael.pokemon.model.Pokemon;
+import com.rafael.pokemon.model.Region;
 import com.rafael.pokemon.model.enums.Type;
 import com.rafael.pokemon.repository.PokemonRepository;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
-
+import com.rafael.pokemon.repository.RegionRepository;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
 
 @Component
 public class DataSeeder implements CommandLineRunner {
 
   private final PokemonRepository pokemonRepository;
+  private final RegionRepository regionRepository;
 
-  public DataSeeder(PokemonRepository pokemonRepository) {
+  public DataSeeder(PokemonRepository pokemonRepository, RegionRepository regionRepository) {
     this.pokemonRepository = pokemonRepository;
+    this.regionRepository = regionRepository;
   }
 
   @Override
@@ -42,7 +44,15 @@ public class DataSeeder implements CommandLineRunner {
             Long id = Long.parseLong(row[0]);
             String name = row[1];
             String generation = row[2];
-            String region = row[3];
+
+            String regionId = row[3].toUpperCase();
+            String regionName = row[3];
+
+            Region region =
+                regionRepository
+                    .findById(regionId)
+                    .orElseGet(() -> regionRepository.save(new Region(regionId, regionName)));
+
             List<Type> types =
                 Arrays.stream(row[4].split(";"))
                     .map(String::toUpperCase)

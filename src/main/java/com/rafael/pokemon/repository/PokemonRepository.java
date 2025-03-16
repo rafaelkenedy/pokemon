@@ -41,7 +41,7 @@ public interface PokemonRepository extends JpaRepository<Pokemon, Long> {
     FROM Pokemon p
     WHERE
         (:generation IS NULL OR p.generation = :generation)
-        AND (:region IS NULL OR p.region = :region)
+        AND (:region IS NULL OR p.region.id = :region)
         AND (
             :#{#types == null or #types.isEmpty()} = true
             OR (
