@@ -18,7 +18,10 @@ public class Pokemon {
 
   @Id private Long id;
   private String name;
-  private String generation;
+
+  @ManyToOne
+  @JoinColumn(name = "generation_id")
+  private Generation generation;
 
   @ManyToOne
   @JoinColumn(name = "region_id")

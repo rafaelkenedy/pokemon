@@ -1,9 +1,13 @@
 package com.rafael.pokemon.config;
 
+import static com.rafael.pokemon.config.utils.Utils.toRoman;
+
 import com.opencsv.CSVReader;
+import com.rafael.pokemon.model.Generation;
 import com.rafael.pokemon.model.Pokemon;
 import com.rafael.pokemon.model.Region;
 import com.rafael.pokemon.model.enums.Type;
+import com.rafael.pokemon.repository.GenerationRepository;
 import com.rafael.pokemon.repository.PokemonRepository;
 import com.rafael.pokemon.repository.RegionRepository;
 import java.io.InputStream;
@@ -19,10 +23,15 @@ public class DataSeeder implements CommandLineRunner {
 
   private final PokemonRepository pokemonRepository;
   private final RegionRepository regionRepository;
+  private final GenerationRepository generationRepository;
 
-  public DataSeeder(PokemonRepository pokemonRepository, RegionRepository regionRepository) {
+  public DataSeeder(
+      PokemonRepository pokemonRepository,
+      RegionRepository regionRepository,
+      GenerationRepository generationRepository) {
     this.pokemonRepository = pokemonRepository;
     this.regionRepository = regionRepository;
+    this.generationRepository = generationRepository;
   }
 
   @Override
@@ -43,10 +52,20 @@ public class DataSeeder implements CommandLineRunner {
 
             Long id = Long.parseLong(row[0]);
             String name = row[1];
-            String generation = row[2];
+
+            Long generationId = Long.parseLong(row[2]);
+            String generationName = "Generation " + toRoman(generationId);
 
             String regionId = row[3].toUpperCase();
             String regionName = row[3];
+
+            Generation generation =
+                generationRepository
+                    .findById(generationId)
+                    .orElseGet(
+                        () ->
+                            generationRepository.save(
+                                new Generation(generationId, generationName)));
 
             Region region =
                 regionRepository

@@ -11,36 +11,36 @@ import org.springframework.data.repository.query.Param;
 
 public interface PokemonRepository extends JpaRepository<Pokemon, Long> {
 
-  @Query(
-      """
-    SELECT p
-    FROM Pokemon p
-    WHERE
-       (:generation IS NULL OR p.generation = :generation)
-       AND (:region IS NULL OR p.region = :region)
-       AND (
-         :typeCount = 0
-         OR (
-           (SELECT COUNT(t3)
-              FROM p.types t3
-             WHERE t3 IN :types
-           ) = :typeCount
-         )
-       )
-""")
-  Page<Pokemon> findByExactTypesAndFilters(
-      @Param("generation") String generation,
-      @Param("region") String region,
-      @Param("types") List<Type> types,
-      @Param("typeCount") int typeCount,
-      Pageable pageable);
+//  @Query(
+//      """
+//    SELECT p
+//    FROM Pokemon p
+//    WHERE
+//       (:generation IS NULL OR p.generation = :generation)
+//       AND (:region IS NULL OR p.region = :region)
+//       AND (
+//         :typeCount = 0
+//         OR (
+//           (SELECT COUNT(t3)
+//              FROM p.types t3
+//             WHERE t3 IN :types
+//           ) = :typeCount
+//         )
+//       )
+//""")
+//  Page<Pokemon> findByExactTypesAndFilters(
+//      @Param("generation") String generation,
+//      @Param("region") String region,
+//      @Param("types") List<Type> types,
+//      @Param("typeCount") int typeCount,
+//      Pageable pageable);
 
   @Query(
       """
     SELECT p
     FROM Pokemon p
     WHERE
-        (:generation IS NULL OR p.generation = :generation)
+        (:generation IS NULL OR p.generation.id = :generation)
         AND (:region IS NULL OR p.region.id = :region)
         AND (
             :#{#types == null or #types.isEmpty()} = true
