@@ -1,6 +1,5 @@
 package com.rafael.pokemon.model;
 
-import com.rafael.pokemon.model.enums.Type;
 import jakarta.persistence.*;
 import java.util.List;
 import lombok.AllArgsConstructor;

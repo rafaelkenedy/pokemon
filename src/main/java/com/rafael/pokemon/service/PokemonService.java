@@ -1,7 +1,6 @@
 package com.rafael.pokemon.service;
 
 import com.rafael.pokemon.model.Pokemon;
-import com.rafael.pokemon.model.enums.Type;
 import com.rafael.pokemon.repository.PokemonRepository;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -18,10 +17,10 @@ public class PokemonService {
   }
 
   public Page<Pokemon> getFilteredPokemons(
-      String generation, String region, List<Type> types, int page) {
+      String generation, String region, List<String> typesIds, int page) {
     Pageable pageable = PageRequest.of(page, 10);
 
-    return pokemonRepository.findByTypesAndFilters(generation, region, types, pageable);
+    return pokemonRepository.findByTypesAndFilters(generation, region, typesIds, pageable);
   }
 
   public Pokemon getRandomPokemon() {

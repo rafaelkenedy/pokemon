@@ -23,12 +23,13 @@ class Region {
 }
 
 class Type {
-    <<Enumeration>>
-    // FIRE, WATER, GRASS, ...
+    <<Entity>>
+    +String id
+    +String name
 }
 
-Pokemon --> "1" Generation : "muitos Pokémon → 1 Generation"
-Pokemon --> "1" Region : "muitos Pokémon → 1 Region"
-Pokemon --> "1..*" Type : "possui"
+Pokemon --> "1" Generation : "pertence"
+Pokemon --> "1" Region : "pertence"
+Pokemon --> "1..*" Type : "possui (many-to-many)"
 
 ```

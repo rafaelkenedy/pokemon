@@ -6,10 +6,11 @@ import com.opencsv.CSVReader;
 import com.rafael.pokemon.model.Generation;
 import com.rafael.pokemon.model.Pokemon;
 import com.rafael.pokemon.model.Region;
-import com.rafael.pokemon.model.enums.Type;
+import com.rafael.pokemon.model.Type;
 import com.rafael.pokemon.repository.GenerationRepository;
 import com.rafael.pokemon.repository.PokemonRepository;
 import com.rafael.pokemon.repository.RegionRepository;
+import com.rafael.pokemon.repository.TypeRepository;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -24,14 +25,17 @@ public class DataSeeder implements CommandLineRunner {
   private final PokemonRepository pokemonRepository;
   private final RegionRepository regionRepository;
   private final GenerationRepository generationRepository;
+  private final TypeRepository typeRepository;
 
   public DataSeeder(
       PokemonRepository pokemonRepository,
       RegionRepository regionRepository,
-      GenerationRepository generationRepository) {
+      GenerationRepository generationRepository,
+      TypeRepository typeRepository) {
     this.pokemonRepository = pokemonRepository;
     this.regionRepository = regionRepository;
     this.generationRepository = generationRepository;
+    this.typeRepository = typeRepository;
   }
 
   @Override
@@ -74,8 +78,18 @@ public class DataSeeder implements CommandLineRunner {
 
             List<Type> types =
                 Arrays.stream(row[4].split(";"))
-                    .map(String::toUpperCase)
-                    .map(Type::valueOf)
+                    .map(String::trim)
+                    .map(
+                        typeStr -> {
+                          String typeId = typeStr.toLowerCase();
+
+                          return typeRepository
+                              .findById(typeId)
+                              .orElseGet(
+                                  () -> {
+                                    return typeRepository.save(new Type(typeId, typeStr));
+                                  });
+                        })
                     .toList();
 
             Pokemon pokemon = new Pokemon(id, name, generation, region, types);
